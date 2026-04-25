@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portafolio</title>
+    <meta name="description" content="Portafolio de proyectos de Marcos Facchetti: backend, IA y software engineering." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Header: navegación + hero (presentación principal) -->
+    <header class="site-header">
+      <!-- Topbar sticky: marca + links de navegación -->
+      <div class="container header-topbar">
+        <a class="brand" href="#top" aria-label="Ir al inicio">
+          <span class="brand-mark" aria-hidden="true">MF</span>
+          <span class="brand-text">Portfolio</span>
+        </a>
+        <nav class="main-nav" aria-label="Navegación principal">
+          <a href="#proyectos">Proyectos</a>
+          <a href="#cv">CV</a>
+          <a href="#contacto">Contacto</a>
+        </nav>
+      </div>
+
+      <!-- Hero: pitch rápido + CTAs + resumen -->
+      <div class="container hero" id="top">
+        <div class="hero-content">
+          <p class="eyebrow">Backend · IA · Software Engineering</p>
+          <h1 id="hero-name">Hola, soy Marco</h1>
+          <p id="hero-profession" class="hero-profession"></p>
+          <p id="hero-intro" class="intro">
+            Soy desarrollador con enfoque en backend e IA. Me interesa construir soluciones escalables, limpias y bien diseñadas.
+          </p>
+
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="#proyectos">Ver proyectos</a>
+            <a class="btn btn-ghost" href="#contacto">Contactar</a>
+          </div>
+
+          <div class="hero-badges" aria-label="Highlights">
+            <span class="badge">Arquitectura limpia</span>
+            <span class="badge">APIs & Docker</span>
+            <span class="badge">Algoritmos</span>
+          </div>
+        </div>
+
+        <div class="hero-card" aria-label="Resumen rápido">
+          <div class="hero-card-inner">
+            <p class="hero-kicker">Disponible para entrevistas</p>
+            <p class="hero-card-title">Construyo productos con foco en calidad y performance.</p>
+            <div class="hero-meta">
+              <div class="meta-item">
+                <span class="meta-label">Stack</span>
+                <span class="meta-value">Python · Java · JS</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Interés</span>
+                <span class="meta-value">Backend · IA</span>
+              </div>
+            </div>
+            <a class="btn btn-secondary" href="#cv">Ver CV</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Sección proyectos: grilla generada desde `data.js` -->
+      <section id="proyectos" class="section">
+        <div class="container">
+          <div class="section-header">
+            <span>01</span>
+            <h2>Proyectos</h2>
+          </div>
+          <p id="projects-copy" class="section-copy">
+            Aquí están algunos de mis proyectos. Cada tarjeta incluye una descripción, tecnologías usadas y el valor que aporta.
+          </p>
+
+          <div id="project-list" class="project-grid">
+            <article class="project-card">
+              <h3>Cargando proyectos...</h3>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección CV: tarjetas generadas desde `data.js` -->
+      <section id="cv" class="section section-alt">
+        <div class="container">
+          <div class="section-header">
+            <span>02</span>
+            <h2>Currículum</h2>
+          </div>
+          <div id="cv-list" class="cv-grid">
+            <div class="cv-card">
+              <h3>Cargando contenido...</h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección contacto: email + links a redes -->
+      <section id="contacto" class="section">
+        <div class="container">
+          <div class="section-header">
+            <span>03</span>
+            <h2>Contacto</h2>
+          </div>
+          <div class="contact-card">
+            <p id="contact-message" class="contact-message">
+              ¿Quieres ver más proyectos o descargar mi CV en PDF? Contáctame en:
+            </p>
+            <p class="contact-link">
+              <a id="contact-email" href="mailto:tu-email@ejemplo.com">tu-email@ejemplo.com</a>
+            </p>
+            <div id="social-links" class="social-links" aria-label="Redes sociales"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer: cierre + link de navegación al inicio -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <p>Portafolio estático creado para mostrar proyectos y CV.</p>
+        <a class="footer-link" href="#top">Volver arriba</a>
+      </div>
+    </footer>
+
+    <script src="data.js" defer></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>
