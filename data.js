@@ -1,104 +1,163 @@
-/**
- * Fuente de datos del portafolio.
- * Este objeto es consumido por `app.js` para renderizar el HTML.
- *
- * Estructura esperada:
- * - `name`, `profession`, `intro` para el Hero
- * - `projects[]` para la grilla de proyectos (botones Demo/Repo opcionales)
- * - `cv[]` para tarjetas de CV (bullets)
- * - `contact` para email y redes
- */
 const portfolioData = {
   name: "Marcos Facchetti",
-  profession: "Software Developer | AI & Backend",
-  intro:
-    "Desarrollador con enfoque en arquitectura Backend e IA. Estudiante en UNR (Rosario) apasionado por la ingeniería de software, la optimización de procesos y el despliegue de soluciones escalables mediante Docker.",
-  
-  /**
-   * Proyectos destacados.
-   * - `demo` es opcional: si existe, aparece el botón "Demo"
-   * - `repo` es opcional: si existe, aparece el botón "Repositorio"
-   */
+  pageTitle: "Marcos Facchetti | Backend Developer",
+  role: "Backend Developer | AI & Full Stack",
+  location: "Rosario, Argentina",
+  cvUrl: "assets/marcos-facchetti-cv.pdf",
+
+  hero: {
+    eyebrow: "UNR - Backend - IA aplicada - Disponible para entrevistas",
+    intro:
+      "Construyo APIs, dashboards y sistemas con logica de negocio clara: autenticacion, persistencia, Docker, pruebas y modelos de IA aplicados a problemas concretos.",
+    actions: [
+      { label: "Ver proyectos", url: "#proyectos", variant: "primary" },
+      { label: "Descargar CV", url: "assets/marcos-facchetti-cv.pdf", variant: "secondary", download: true },
+      { label: "LinkedIn", url: "https://www.linkedin.com/in/marcos-facchetti-50b184303/", variant: "ghost" }
+    ],
+    stats: [
+      { value: "7", label: "proyectos publicados" },
+      { value: "API + IA", label: "foco principal" },
+      { value: "Docker", label: "deploy reproducible" }
+    ]
+  },
+
   projects: [
     {
-      title: "FraudDetectionAI Engine",
-      description: "API de detección de anomalías en tiempo real.",
-      technologies: ["Python", "Flask", "Machine Learning", "Docker"],
-      details: "Sistema backend robusto para detección de fraude. Enfocado en arquitectura limpia, manejo de variables de entorno, Dockerización para despliegue y lógica de inferencia optimizada.",
-      repo: "https://github.com/marcosfacchetti9n-ship-it/Proyecto-FraudDetectionAI-",
-      demo: "https://fraud-detection-api-jmx0.onrender.com/"
+      title: "RiskShield AI",
+      featured: true,
+      kind: "Full stack risk platform",
+      categories: ["IA", "Backend", "Full Stack"],
+      description:
+        "Plataforma end-to-end para scoring de riesgo transaccional con FastAPI, PostgreSQL, reglas de negocio, Machine Learning y dashboard administrativo.",
+      impact:
+        "Simula un flujo profesional de riesgo: login con JWT, analisis de transacciones, decision APPROVE/REVIEW/BLOCK, metricas operativas y feedback manual para mejora futura del modelo.",
+      technologies: ["FastAPI", "PostgreSQL", "SQLAlchemy", "JWT", "scikit-learn", "React", "TypeScript", "Docker"],
+      highlights: [
+        "Arquitectura modular con routers, schemas, services y motor de riesgo testeable.",
+        "Score final combinando reglas deterministicas y modelo ML opcional.",
+        "Dashboard con metricas, transacciones recientes, detalle y feedback manual."
+      ],
+      repo: "https://github.com/marcosfacchetti9n-ship-it/Proyecto-RiskShield_AI",
+      demo: "https://riskshield-dashboard.onrender.com",
+      docs: "https://proyecto-riskshield-ai.onrender.com/docs"
     },
     {
-      title: "NeuroBallistics Engine",
-      description: "Motor de físicas y cinemática en tiempo real.",
-      technologies: ["JavaScript", "Math & Physics", "Algorithmic Logic"],
-      details: "Desarrollo de motor propio implementando vectores, cinemática y colisiones. Enfoque en optimización del Game Loop y lógica algorítmica para puntería autónoma.",
-      repo: "https://github.com/marcosfacchetti9n-ship-it/Proyecto-NeuroBallistics",
-      demo: "https://neuroballistics.netlify.app/"
-    },
-    {
-      title: "TaskFlow Backend",
-      description: "API RESTful con gestión de persistencia.",
-      technologies: ["Java", "SQL", "API Design", "Authentication"],
-      details: "Gestor de tareas enfocado en diseño de API REST, autenticación segura de usuarios y gestión eficiente de bases de datos relacionales.",
-      repo: "https://github.com/marcosfacchetti9n-ship-it/Proyecto-TaskFlow",
-      demo: "https://codex-1-2dka.onrender.com/"
-    },
-    {
-      title: "GeoEngine 3D",
-      description: "Simulación matemática y renderizado.",
-      technologies: ["Python", "Linear Algebra", "Geometry"],
-      details: "Exploración de álgebra lineal 3D y proyecciones geométricas. Aplicación práctica de cálculos matemáticos avanzados en entornos de simulación.",
-      repo: "https://github.com/marcosfacchetti9n-ship-it/Proyecto-GeoEngine"
-    },
-    {
-      title: "Northstar Shop (E-commerce Full Stack)",
-      description: "E-commerce full stack con autenticación JWT, roles y flujo de compra.",
+      title: "Northstar Shop",
+      kind: "E-commerce full stack",
+      categories: ["Backend", "Full Stack"],
+      description: "E-commerce con autenticacion JWT, roles, carrito, checkout y ordenes.",
+      impact:
+        "Backend por capas con Spring Boot, PostgreSQL y manejo global de errores; deploy real con frontend, API y base de datos cloud.",
       technologies: ["Java 17", "Spring Boot", "Spring Security", "PostgreSQL", "JWT", "Docker", "Render"],
-      details:
-        "Aplicación full stack end-to-end: modelado relacional, autenticación y autorización (roles USER/ADMIN), carrito, checkout y órdenes. Backend por capas (controller/service/repository) con manejo global de errores y deploy real (frontend + API + DB cloud).",
       repo: "https://github.com/marcosfacchetti9n-ship-it/Proyecto-E-commerce",
       demo: "https://e-commerce-1-7jox.onrender.com"
     },
     {
-      title: "Usuarios CRUD (Frontend + API REST)",
-      description: "Aplicación web para crear, listar, editar y eliminar usuarios.",
+      title: "FraudDetectionAI Engine",
+      kind: "API de deteccion",
+      categories: ["IA", "Backend"],
+      description: "API de deteccion de anomalias en tiempo real.",
+      impact:
+        "Sistema backend para inferencia, variables de entorno y despliegue Docker, pensado para exponer predicciones desde una API mantenible.",
+      technologies: ["Python", "Flask", "Machine Learning", "Docker"],
+      repo: "https://github.com/marcosfacchetti9n-ship-it/Proyecto-FraudDetectionAI-",
+      demo: "https://fraud-detection-api-jmx0.onrender.com/"
+    },
+    {
+      title: "TaskFlow Backend",
+      kind: "API REST",
+      categories: ["Backend"],
+      description: "API RESTful con autenticacion, usuarios y persistencia.",
+      impact:
+        "Proyecto enfocado en contratos REST, seguridad basica y gestion de datos relacionales para una app de tareas.",
+      technologies: ["Java", "SQL", "API Design", "Authentication"],
+      repo: "https://github.com/marcosfacchetti9n-ship-it/Proyecto-TaskFlow",
+      demo: "https://codex-1-2dka.onrender.com/"
+    },
+    {
+      title: "NeuroBallistics Engine",
+      kind: "Simulacion",
+      categories: ["Algoritmos", "Frontend"],
+      description: "Motor de fisicas, cinematica y colisiones en tiempo real.",
+      impact:
+        "Implementa vectores, game loop y logica algoritmica para punteria autonoma, con foco en rendimiento e interaccion visual.",
+      technologies: ["JavaScript", "Math & Physics", "Algorithmic Logic"],
+      repo: "https://github.com/marcosfacchetti9n-ship-it/Proyecto-NeuroBallistics",
+      demo: "https://neuroballistics.netlify.app/"
+    },
+    {
+      title: "Usuarios CRUD",
+      kind: "Frontend + API",
+      categories: ["Backend", "Frontend"],
+      description: "Aplicacion web para crear, listar, editar y eliminar usuarios.",
+      impact:
+        "Frontend en JavaScript vanilla conectado a API REST con persistencia PostgreSQL y flujo completo de edicion/eliminacion.",
       technologies: ["HTML", "CSS", "JavaScript", "REST API", "PostgreSQL"],
-      details:
-        "Frontend en JavaScript vanilla conectado a una API REST (backend en Java) con persistencia en PostgreSQL. Incluye operaciones CRUD completas con UI simple y flujo de edición/eliminación.",
       repo: "https://github.com/marcosfacchetti9n-ship-it/Proyecto-Usuarios-CRUD",
       demo: "https://mftestfrontend.netlify.app/"
+    },
+    {
+      title: "GeoEngine 3D",
+      kind: "Motor matematico",
+      categories: ["Algoritmos"],
+      description: "Simulacion matematica y renderizado geometrico.",
+      impact:
+        "Exploracion de algebra lineal 3D, proyecciones y calculos geometricos aplicados a entornos de simulacion.",
+      technologies: ["Python", "Linear Algebra", "Geometry"],
+      repo: "https://github.com/marcosfacchetti9n-ship-it/Proyecto-GeoEngine"
     }
   ],
 
-  /**
-   * Secciones de CV: cada sección se renderiza como tarjeta con bullets.
-   */
+  stack: [
+    {
+      title: "Backend",
+      items: ["Java", "Spring Boot", "Python", "FastAPI", "Flask", "REST APIs"]
+    },
+    {
+      title: "Datos e IA",
+      items: ["PostgreSQL", "SQLAlchemy", "pandas", "numpy", "scikit-learn", "risk scoring"]
+    },
+    {
+      title: "Frontend",
+      items: ["React", "TypeScript", "Vite", "JavaScript", "HTML", "CSS"]
+    },
+    {
+      title: "Infra y calidad",
+      items: ["Docker", "Docker Compose", "Render", "Git workflows", "pytest", "env config"]
+    }
+  ],
+
   cv: [
     {
-      title: "Perfil Profesional",
+      title: "Perfil profesional",
       items: [
-        "Enfoque en metodologías de desarrollo profesional (Git workflows, Docker, Docstrings).",
-        "Capacidad de resolución de problemas algorítmicos y matemáticos aplicados a IA.",
-        "Mentalidad orientada a la calidad de código, legibilidad y mantenibilidad."
+        "Desarrollador orientado a backend, IA aplicada y productos full stack con deploy real.",
+        "Interes fuerte en arquitectura limpia, legibilidad, pruebas y separacion de responsabilidades.",
+        "Estudiante en UNR, Rosario, con foco en crecer hacia equipos de software profesionales."
       ]
     },
     {
-      title: "Habilidades Técnicas",
+      title: "Fortalezas tecnicas",
       items: [
-        "Lenguajes: Python, JavaScript, Java.",
-        "Backend & Dev: APIs, Docker, Git (Branching), Bases de Datos SQL.",
-        "IA & Math: Algoritmos, Álgebra Lineal, Cinemática."
+        "Diseno de APIs, autenticacion JWT, persistencia SQL y manejo de errores.",
+        "Dockerizacion, variables de entorno y despliegues reproducibles.",
+        "Modelos simples de ML, reglas de negocio explicables y procesamiento de datos."
+      ]
+    },
+    {
+      title: "Forma de trabajo",
+      items: [
+        "Proyectos documentados con README, demos publicas y repositorios navegables.",
+        "Mentalidad de producto: mostrar flujos completos, no solo ejercicios aislados.",
+        "Cuidado por la experiencia de quien evalua: demo, repo, contexto tecnico y CV disponibles."
       ]
     }
   ],
 
-  /**
-   * Bloque de contacto: email + mensaje + links externos.
-   */
   contact: {
     email: "marcosfacchetti9n@gmail.com",
-    message: "Construyo soluciones enfocadas en escalabilidad y limpieza de código. ¿Tienes un desafío técnico donde pueda aportar? Escríbeme.",
+    message:
+      "Si estas buscando un perfil junior con base fuerte en backend, IA aplicada y ganas reales de construir, hablemos.",
     socials: [
       { label: "GitHub", url: "https://github.com/marcosfacchetti9n-ship-it" },
       { label: "LinkedIn", url: "https://www.linkedin.com/in/marcos-facchetti-50b184303/" }

@@ -1,174 +1,269 @@
-/**
- * Render del portafolio (sin frameworks)
- * - `data.js` define `portfolioData` (contenido)
- * - este archivo crea nodos DOM y los inserta en `index.html`
- * - evitamos `innerHTML` para que el render sea más robusto/seguro
- */
+const state = {
+  activeFilter: "Todos"
+};
 
-/**
- * Crea un fragmento con <li> por cada string (para listas del CV).
- * @param {string[]} items
- * @returns {DocumentFragment}
- */
-function createList(items) {
-  const fragment = document.createDocumentFragment();
-  items.forEach((item) => {
-    const li = document.createElement("li");
-    li.textContent = item;
-    fragment.appendChild(li);
-  });
-  return fragment;
+function byId(id) {
+  return document.getElementById(id);
 }
 
-/**
- * Crea "chips" (badges) para mostrar tecnologías.
- * @param {string[]} items
- * @returns {DocumentFragment}
- */
+function createElement(tag, className, text) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text) element.textContent = text;
+  return element;
+}
+
+function createLink(item, extraClass) {
+  const link = document.createElement("a");
+  link.href = item.url;
+  link.className = extraClass || "";
+  link.textContent = item.label;
+
+  if (item.download) {
+    link.setAttribute("download", "");
+  }
+
+  if (item.url.startsWith("http")) {
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+  }
+
+  return link;
+}
+
 function createChips(items) {
   const fragment = document.createDocumentFragment();
   items.forEach((item) => {
-    const span = document.createElement("span");
-    span.className = "chip";
-    span.textContent = item;
-    fragment.appendChild(span);
+    const chip = createElement("span", "chip", item);
+    fragment.appendChild(chip);
   });
   return fragment;
 }
 
-/**
- * Construye la tarjeta de un proyecto con:
- * - título + descripción + tecnologías (chips) + detalles
- * - acciones: Demo (si existe) y Repositorio (si existe)
- * @param {{title:string,description:string,technologies:string[],details:string,repo?:string,demo?:string}} project
- * @returns {HTMLElement}
- */
-function createProjectCard(project) {
-  const article = document.createElement("article");
-  article.className = "project-card";
+function createProjectLinks(project) {
+  const actions = createElement("div", "card-actions");
 
-  const title = document.createElement("h3");
-  title.textContent = project.title;
-  article.appendChild(title);
-
-  const description = document.createElement("p");
-  description.textContent = project.description;
-  article.appendChild(description);
-
-  const chips = document.createElement("div");
-  chips.className = "chip-row";
-  chips.appendChild(createChips(project.technologies));
-  article.appendChild(chips);
-
-  const details = document.createElement("p");
-  details.textContent = project.details;
-  details.className = "project-details";
-  article.appendChild(details);
-
-  const actions = document.createElement("div");
-  actions.className = "card-actions";
-
-  // Botón Demo (si el proyecto tiene URL publicada)
   if (project.demo) {
-    const demo = document.createElement("a");
-    demo.href = project.demo;
-    demo.target = "_blank";
-    demo.rel = "noopener noreferrer";
-    demo.className = "btn btn-small btn-primary";
-    demo.textContent = "Demo";
-    actions.appendChild(demo);
+    actions.appendChild(createLink({ label: "Demo", url: project.demo }, "btn btn-small btn-primary"));
   }
 
-  // Botón Repositorio (si hay URL del repo)
+  if (project.docs) {
+    actions.appendChild(createLink({ label: "API docs", url: project.docs }, "btn btn-small btn-secondary"));
+  }
+
   if (project.repo) {
-    const link = document.createElement("a");
-    link.href = project.repo;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.className = "btn btn-small btn-ghost";
-    link.textContent = "Repositorio";
-    actions.appendChild(link);
+    actions.appendChild(createLink({ label: "Repositorio", url: project.repo }, "btn btn-small btn-ghost"));
   }
 
-  article.appendChild(actions);
+  return actions;
+}
 
+function createProjectVisual(project) {
+  const visual = createElement("div", "project-visual");
+  const kind = createElement("span", "project-kind", project.kind);
+  const title = createElement("strong", "", project.title);
+  const line = createElement("span", "visual-line");
+  const lineAlt = createElement("span", "visual-line visual-line-short");
+
+  visual.append(kind, title, line, lineAlt);
+  return visual;
+}
+
+function createProjectCard(project) {
+  const article = createElement("article", "project-card");
+  article.appendChild(createProjectVisual(project));
+
+  const title = createElement("h3", "", project.title);
+  const description = createElement("p", "project-description", project.description);
+  const impact = createElement("p", "project-impact", project.impact);
+
+  const chips = createElement("div", "chip-row");
+  chips.appendChild(createChips(project.technologies));
+
+  article.append(title, description, impact, chips, createProjectLinks(project));
   return article;
 }
 
-/**
- * Construye una tarjeta del CV con un título y una lista de bullets.
- * @param {{title:string, items:string[]}} section
- * @returns {HTMLElement}
- */
-function createCvCard(section) {
-  const card = document.createElement("div");
-  card.className = "cv-card";
+function createFeaturedProject(project) {
+  const wrapper = createElement("article", "featured-card");
+  const content = createElement("div", "featured-copy");
 
-  const title = document.createElement("h3");
-  title.textContent = section.title;
-  card.appendChild(title);
+  content.appendChild(createElement("p", "featured-kicker", "Proyecto destacado"));
+  content.appendChild(createElement("h3", "", project.title));
+  content.appendChild(createElement("p", "featured-description", project.description));
+  content.appendChild(createElement("p", "featured-impact", project.impact));
 
-  const list = document.createElement("ul");
-  list.appendChild(createList(section.items));
-  card.appendChild(list);
-
-  return card;
-}
-
-/**
- * Construye los links de redes sociales (GitHub, LinkedIn, etc.).
- * @param {{label:string, url:string}[]} socials
- * @returns {DocumentFragment}
- */
-function createSocialLinks(socials) {
-  const fragment = document.createDocumentFragment();
-  socials.forEach((item, index) => {
-    const link = document.createElement("a");
-    link.href = item.url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.className = "social-link";
-    link.textContent = item.label;
-    fragment.appendChild(link);
-    if (index < socials.length - 1) fragment.appendChild(document.createTextNode(" "));
+  const highlights = createElement("ul", "featured-highlights");
+  project.highlights.forEach((item) => {
+    highlights.appendChild(createElement("li", "", item));
   });
-  return fragment;
+
+  const chips = createElement("div", "chip-row");
+  chips.appendChild(createChips(project.technologies));
+  content.append(highlights, chips, createProjectLinks(project));
+
+  const panel = createElement("div", "featured-panel");
+  panel.appendChild(createElement("span", "panel-label", "risk_engine.py"));
+
+  const scoreRows = [
+    ["rule_score", "0.88"],
+    ["ml_score", "0.81"],
+    ["final_score", "0.924"],
+    ["decision", "BLOCK"]
+  ];
+
+  scoreRows.forEach(([label, value]) => {
+    const row = createElement("div", "panel-row");
+    row.append(createElement("span", "", label), createElement("strong", "", value));
+    panel.appendChild(row);
+  });
+
+  wrapper.append(content, panel);
+  return wrapper;
 }
 
-/**
- * Pinta todo el contenido de la página usando `portfolioData`.
- * Busca nodos por id y reemplaza sus hijos con contenido generado.
- * @param {any} data
- */
-function renderPortfolio(data) {
-  document.title = `${data.name} | Portafolio`;
-  document.getElementById("hero-name").textContent = `Hola, soy ${data.name}`;
-  const professionEl = document.getElementById("hero-profession");
-  professionEl.textContent = data.profession ? data.profession : "";
-  document.getElementById("hero-intro").textContent = data.intro;
-  document.getElementById("projects-copy").textContent =
-    "Aquí están algunos de mis proyectos. Cada tarjeta incluye una descripción, tecnologías usadas y el valor que aporta.";
+function getFilters(projects) {
+  const filters = new Set(["Todos"]);
+  projects.forEach((project) => {
+    project.categories.forEach((category) => filters.add(category));
+  });
+  return Array.from(filters);
+}
 
-  const projectList = document.getElementById("project-list");
-  projectList.replaceChildren();
-  data.projects.forEach((project) => projectList.appendChild(createProjectCard(project)));
+function renderProjectFilters(projects) {
+  const filtersEl = byId("project-filters");
+  filtersEl.replaceChildren();
 
-  const cvList = document.getElementById("cv-list");
+  getFilters(projects).forEach((filter) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "filter-button";
+    button.textContent = filter;
+    button.dataset.filter = filter;
+    button.setAttribute("aria-pressed", String(state.activeFilter === filter));
+    filtersEl.appendChild(button);
+  });
+}
+
+function renderProjects(data) {
+  const featured = data.projects.find((project) => project.featured);
+  const projects = data.projects.filter((project) => !project.featured);
+  const visibleProjects =
+    state.activeFilter === "Todos"
+      ? projects
+      : projects.filter((project) => project.categories.includes(state.activeFilter));
+
+  byId("featured-project").replaceChildren(createFeaturedProject(featured));
+  byId("project-count").textContent = `${visibleProjects.length} proyectos filtrados`;
+
+  const list = byId("project-list");
+  list.replaceChildren();
+  visibleProjects.forEach((project) => list.appendChild(createProjectCard(project)));
+
+  renderProjectFilters(projects);
+}
+
+function renderHero(data) {
+  document.title = data.pageTitle;
+  byId("hero-title").textContent = data.name;
+  byId("hero-role").textContent = data.role;
+  byId("hero-eyebrow").textContent = data.hero.eyebrow;
+  byId("hero-intro").textContent = data.hero.intro;
+
+  const actions = byId("hero-actions");
+  actions.replaceChildren();
+  data.hero.actions.forEach((action) => {
+    actions.appendChild(createLink(action, `btn btn-${action.variant}`));
+  });
+
+  const stats = byId("hero-stats");
+  stats.replaceChildren();
+  data.hero.stats.forEach((stat) => {
+    const item = createElement("div", "stat-item");
+    item.append(createElement("dt", "", stat.value), createElement("dd", "", stat.label));
+    stats.appendChild(item);
+  });
+
+  byId("topbar-cv").href = data.cvUrl;
+  byId("cv-download").href = data.cvUrl;
+}
+
+function renderStack(data) {
+  const stack = byId("stack-list");
+  stack.replaceChildren();
+
+  data.stack.forEach((section) => {
+    const card = createElement("article", "stack-card");
+    card.appendChild(createElement("h3", "", section.title));
+
+    const chips = createElement("div", "chip-row");
+    chips.appendChild(createChips(section.items));
+    card.appendChild(chips);
+
+    stack.appendChild(card);
+  });
+}
+
+function renderCv(data) {
+  const cvList = byId("cv-list");
   cvList.replaceChildren();
-  data.cv.forEach((section) => cvList.appendChild(createCvCard(section)));
 
-  document.getElementById("contact-message").textContent = data.contact.message;
-  const emailLink = document.getElementById("contact-email");
-  emailLink.href = `mailto:${data.contact.email}`;
-  emailLink.textContent = data.contact.email;
-  const socialsEl = document.getElementById("social-links");
-  socialsEl.replaceChildren();
-  socialsEl.appendChild(createSocialLinks(data.contact.socials));
+  data.cv.forEach((section) => {
+    const card = createElement("article", "cv-card");
+    card.appendChild(createElement("h3", "", section.title));
+
+    const list = createElement("ul", "");
+    section.items.forEach((item) => list.appendChild(createElement("li", "", item)));
+    card.appendChild(list);
+    cvList.appendChild(card);
+  });
 }
 
-// Arranque: cuando el HTML está listo, renderizamos usando `portfolioData` (definido en `data.js`).
-document.addEventListener("DOMContentLoaded", function () {
+function renderContact(data) {
+  byId("contact-message").textContent = data.contact.message;
+
+  const email = byId("contact-email");
+  email.href = `mailto:${data.contact.email}`;
+  email.textContent = data.contact.email;
+
+  const socials = byId("social-links");
+  socials.replaceChildren();
+  data.contact.socials.forEach((item) => {
+    socials.appendChild(createLink(item, "social-link"));
+  });
+
+  const copyButton = byId("copy-email");
+  copyButton.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(data.contact.email);
+      copyButton.textContent = "Email copiado";
+      setTimeout(() => {
+        copyButton.textContent = "Copiar email";
+      }, 1800);
+    } catch (error) {
+      window.location.href = `mailto:${data.contact.email}`;
+    }
+  });
+}
+
+function renderPortfolio(data) {
+  renderHero(data);
+  renderProjects(data);
+  renderStack(data);
+  renderCv(data);
+  renderContact(data);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
   if (typeof portfolioData !== "undefined") {
     renderPortfolio(portfolioData);
   }
+});
+
+document.addEventListener("click", (event) => {
+  const filterButton = event.target.closest("[data-filter]");
+  if (!filterButton || typeof portfolioData === "undefined") return;
+
+  state.activeFilter = filterButton.dataset.filter;
+  renderProjects(portfolioData);
 });
